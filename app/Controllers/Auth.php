@@ -9,19 +9,19 @@ class Auth extends SessionController
         parent::__construct();
     }
 
-    public function privCheck()
-    {
-        if ($this->sessionCheck() == 'admin') {
-            return redirect()->to(HOST_URL . '/admin');
-        } else if ($this->sessionCheck() == 'user') {
-            return redirect()->to(HOST_URL . '/user');
-        }
-    }
-
     public function login()
     {
-        // return $this->privCheck();
-        return view('auth/login');
+        if ($this->session->has('AO_user')) {
+            if ($this->session->get('level') == 'user') {
+                return redirect()->to(HOST_URL . '/user');
+            } else {
+                return redirect()->to(HOST_URL . '/admin');
+            }
+        } else {
+            // TOP
+            return view('auth/login');
+            // BOTTOM
+        }
     }
 
 
@@ -33,26 +33,37 @@ class Auth extends SessionController
         $userModel = model('UserModel', true, $db);
         if ($action == 'google') {
             if ($userModel->isExist($email)) {
-                $this->setSession('AO_user', $email);
+                $user = $userModel->getUser($email);
+                $sessionData = [
+                    'AO_user' => $email,
+                    'level' => $user['level']
+                ];
+                $this->session->set($sessionData);
                 return '200';
-                // return "Session : " . $_SESSION['AO_user'];
             }
         }
     }
 
     public function register()
     {
-        $this->pending();
-        return view('auth/register');
+        if ($this->session->has('AO_user')) {
+            if ($this->session->get('level') == 'user') {
+                return redirect()->to(HOST_URL . '/user');
+            } else {
+                return redirect()->to(HOST_URL . '/admin');
+            }
+        } else {
+            // TOP
+            $this->pending();
+            return view('auth/register');
+            // BOTTOM
+        }
     }
 
     public function setup()
     {
-        if (isset($_SESSION['pending']) && !empty($_SESSION['pending'])) {
-
-            $data = [
-                'pending' => $_SESSION['pending']
-            ];
+        if ($this->session->has('pending') && !empty($this->session->get('pending'))) {
+            $data = ['pending' => $this->session->get('pending')];
 
             return view('auth/setup', $data);
         } else {
@@ -68,15 +79,17 @@ class Auth extends SessionController
             if ($isExist == true) {
                 return "409";
             } else {
-                $_SESSION['pending'] = [
+                $sessionData = [
                     'uid'   => $_POST['uid'],
                     'name'  => $_POST['name'],
                     'email' => $_POST['email']
                 ];
+
+                $this->session->set('pending', $sessionData);
                 return "200";
             }
         } else {
-            unset($_SESSION['pending']);
+            $this->session->remove('pending');
         }
     }
 
@@ -101,14 +114,20 @@ class Auth extends SessionController
         $result = $userModel->insertUser($data);
 
         if ($result == true) {
-            $this->setSession('AO_user', $email);
+            // $this->setSession('AO_user', $email);
+            $sessionData = [
+                'AO_user' => $email,
+                'level' => 'user'
+            ];
+            $this->session->set($sessionData);
             $this->pending();
         }
     }
 
     public function logout()
     {
-        unset($_SESSION['AO_user']);
+        $this->session->remove('AO_user');
+        $this->session->remove('level');
         return redirect()->to(HOST_URL . '/login');
     }
 }

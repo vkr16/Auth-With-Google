@@ -34,7 +34,7 @@ class UserModel extends Model
         }
     }
 
-    function getUserByEmail($email)
+    function getUser($email)
     {
         return $this->find($email);
     }
