@@ -41,6 +41,24 @@ class Auth extends SessionController
                 $this->session->set($sessionData);
                 return '200';
             }
+        } else if ($action == 'akuonline') {
+            if ($userModel->isExist($email)) {
+                $user = $userModel->getUser($email);
+                $hash = $user['password'];
+                $password = $_POST['password'];
+                if (password_verify($password, $hash)) {
+                    $sessionData = [
+                        'AO_user' => $email,
+                        'level' => $user['level']
+                    ];
+                    $this->session->set($sessionData);
+                    return '200';
+                } else {
+                    return '401';
+                }
+            } else {
+                return '404';
+            }
         }
     }
 

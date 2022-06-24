@@ -26,7 +26,7 @@
             <h1 class="text-4xl font-Poppins">Masuk</h1>
 
 
-            <form action="" class="mt-6">
+            <form class="mt-6">
                 <div class="input-group">
                     <label for="emailField" class="text-lg mb-2">Email</label>
                     <input type="text" name="email" id="emailField" class="border rounded-lg w-full h-10 outline-none px-4 py-2 focus:ring focus:ring-cyan-500">
@@ -46,7 +46,7 @@
                     </label>
                 </div>
                 <div class="flex justify-between mt-6 gap-2">
-                    <button type="button" class="w-24 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md px-3 py-1 text-white text-center font-ProductSans self-center scale-100 active:scale-90 transition-all duration-75">Masuk</button>
+                    <button type="button" class="w-24 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md px-3 py-1 text-white text-center font-ProductSans self-center scale-100 active:scale-90 transition-all duration-75" onclick="submitLogin()">Masuk</button>
 
                     <p class="self-center">atau</p>
                     <div class="self-center">
@@ -137,6 +137,30 @@
 
             return JSON.parse(jsonPayload);
         };
+
+        function submitLogin() {
+            var email = $('#emailField').val();
+            var pass = $('#passwordField').val();
+
+            Notiflix.Block.dots('body', 'Mengalihkan . . .')
+            $.post("login", {
+                    action: "akuonline",
+                    email: email,
+                    password: pass
+                })
+                .done(function(data) {
+                    if (data == '200') {
+                        setTimeout(() => {
+                            location.replace('user');
+                        }, "2500")
+                    } else if (data == '401') {
+                        Notiflix.Notify.failure('Password yang anda masukkan salah!')
+                    } else if (data == '404') {
+                        Notiflix.Notify.failure('Pengguna tidak ditemukan!')
+                    }
+                });
+
+        }
 
         // Notiflix init
 

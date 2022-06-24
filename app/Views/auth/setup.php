@@ -70,7 +70,6 @@
                     password: password,
                     uid: '<?= esc($pending['uid']) ?>'
                 }).done(function(data) {
-                    console.log(data)
                     setTimeout(() => {
                         location.replace('user');
                     }, "2500")
