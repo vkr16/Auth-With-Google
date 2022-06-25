@@ -18,11 +18,11 @@
 
 <body>
 
-    </style>
-
-    <div class="w-full h-auto md:max-w-sm md:mx-auto">
-        <img src="public/img/secure.jpg" alt="">
-        <div class="mx-6">
+    <div class="w-full md:w-2/3 h-auto md:mx-auto md:flex ">
+        <div class="mx-auto md:mt-32 origin-center md:w-1/2">
+            <img src="public/img/secure.jpg" alt="">
+        </div>
+        <div class="mx-6 mt-10 px-10 md:w-1/2 md:mx-auto md:mt-40 origin-center">
             <h1 class="text-4xl font-Poppins">Masuk</h1>
 
 
@@ -35,17 +35,7 @@
                     <label for="passwordField" class="text-lg mb-2">Kata sandi</label>
                     <input type="password" name="password" id="passwordField" class="border rounded-lg w-full h-10 outline-none px-4 py-2 focus:ring focus:ring-cyan-500">
                 </div>
-                <div class="input-group mt-6">
-                    <label for="saveSession" role="button" class="flex select-none">
-                        <input type="checkbox" name="rememberSession" id="saveSession" onchange="toggle()" hidden>
-                        <div class="self-center bg-white outline outline-1 outline-slate-300 rounded-full w-8 h-5 pt-1 px-1  transition-all duration-300" id="outerswitch">
-                            <div class="bg-slate-300 w-3 h-3 rounded-full transition-all duration-300" id="innerswitch">
-                            </div>
-                        </div>
-                        <p class="ml-2 font-sans" id="textSwitch">Ingat saya</p>
-                    </label>
-                </div>
-                <div class="flex justify-between mt-6 gap-2">
+                <div class="flex justify-between mt-6 gap-2 md:flex-col xl:flex-row">
                     <button type="button" class="w-24 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md px-3 py-1 text-white text-center font-ProductSans self-center scale-100 active:scale-90 transition-all duration-75" onclick="submitLogin()">Masuk</button>
 
                     <p class="self-center">atau</p>
@@ -62,7 +52,7 @@
             <br>
             <hr>
             <br>
-            <div class="flex">
+            <div class="flex gap-2 md:flex-col xl:flex-row">
                 <p class=" w-full self-center">Belum punya akun?</p>
                 <a href="register" class="w-full h-10 bg-gradient-to-r from-fuchsia-400 to-purple-400 rounded-md px-3 py-2 text-white text-center font-ProductSans self-center scale-100 active:scale-90 transition-all duration-75">Buat akun baru</a>
             </div>
@@ -75,17 +65,6 @@
 
 
     <script>
-        function toggle() {
-            if ($('#saveSession').is(":checked")) {
-                $('#outerswitch').addClass('bg-blue-100 outline-blue-400').removeClass('bg-white').removeClass('outline-slate-300')
-                $('#innerswitch').addClass('bg-gradient-to-r from-cyan-500 to-blue-500 translate-x-3').removeClass('bg-slate-300')
-
-            } else {
-                $('#outerswitch').removeClass('bg-blue-100 outline-blue-400').addClass('bg-white').addClass('outline-slate-300')
-                $('#innerswitch').removeClass('bg-gradient-to-r from-cyan-500 to-blue-500 translate-x-3').addClass('bg-slate-300')
-            }
-        }
-
         function responseHandler(response) {
             const credential = parseJwt(response.credential);
             Notiflix.Block.dots('body', 'Harap tunggu...')
@@ -142,7 +121,7 @@
             var email = $('#emailField').val();
             var pass = $('#passwordField').val();
 
-            Notiflix.Block.dots('body', 'Mengalihkan . . .')
+            Notiflix.Block.dots('body', 'Memproses . . .')
             $.post("login", {
                     action: "akuonline",
                     email: email,
@@ -154,8 +133,10 @@
                             location.replace('user');
                         }, "2500")
                     } else if (data == '401') {
+                        Notiflix.Block.remove('body', '')
                         Notiflix.Notify.failure('Password yang anda masukkan salah!')
                     } else if (data == '404') {
+                        Notiflix.Block.remove('body')
                         Notiflix.Notify.failure('Pengguna tidak ditemukan!')
                     }
                 });

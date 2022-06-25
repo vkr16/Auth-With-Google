@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <script src="public/libs/Notiflix/notiflix-aio-3.2.5.min.js"></script>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="public/libs/JQuery/jquery.js"></script>
@@ -17,12 +18,11 @@
 </head>
 
 <body>
-
-    </style>
-
-    <div class="w-full h-auto md:max-w-sm md:mx-auto">
-        <img src="public/img/secure.jpg" alt="">
-        <div class="mx-6">
+    <div class="w-full md:w-2/3 h-auto md:mx-auto md:flex ">
+        <div class="mx-auto md:mt-32 origin-center md:w-1/2">
+            <img src="public/img/secure.jpg" alt="">
+        </div>
+        <div class="mx-6 mt-10 px-10 md:w-1/2 md:mx-auto md:mt-40">
             <h1 class="text-4xl font-Poppins">Daftar</h1>
             <p class="text-slate-900">Silahkan mendaftar dengan akun google anda.</p>
             <div class="mt-6 w-full">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <div class="flex justify-start gap-4 mt-6">
+                <div class="flex justify-start gap-4 mt-6 xl:flex-row xl:gap-4 md:flex-col md:gap-1">
                     <p class="mt-4 w-full self-center">Sudah punya akun?</p>
 
                     <a href="login" class="w-full h-10 mt-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md px-3 py-2 text-white text-center font-ProductSans self-center scale-100 active:scale-90 transition-all duration-75">Masuk</a>
@@ -58,6 +58,7 @@
 
         function responseHandler(response) {
             const credential = parseJwt(response.credential);
+
             $.post("pending", {
                     action: "set",
                     uid: credential.sub,
@@ -67,7 +68,21 @@
                 .done(function(data) {
                     console.log(data)
                     if (data == '409') {
-                        alert('User already exist')
+                        Notiflix.Notify.info('Pengguna sudah terdaftar')
+                        Notiflix.Block.dots('body', 'Mengalihkan untuk login...')
+                        $.post("login", {
+                                action: "google",
+                                uid: credential.sub,
+                                name: credential.name,
+                                email: credential.email
+                            })
+                            .done(function(data) {
+                                if (data == '200') {
+                                    setTimeout(() => {
+                                        location.replace('user');
+                                    }, "2500")
+                                }
+                            });
                     } else {
                         location.replace('setup')
                     }
@@ -83,6 +98,18 @@
 
             return JSON.parse(jsonPayload);
         };
+
+
+        // Notiflix init
+
+        Notiflix.Block.init({});
+        Notiflix.Notify.init({});
+        Notiflix.Confirm.init({
+            titleColor: '#3b82f6',
+            okButtonBackground: '#3b82f6',
+            cancelButtonBackground: '#64748b',
+            borderRadius: '5px'
+        });
     </script>
 
 </body>

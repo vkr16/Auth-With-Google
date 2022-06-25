@@ -21,9 +21,9 @@
 
     </style>
 
-    <div class="w-full h-auto md:max-w-sm md:mx-auto">
+    <div class="w-full h-auto md:max-w-md md:mx-auto">
         <!-- <img src="public/img/secure.jpg" alt=""> -->
-        <div class="mx-6 mt-4">
+        <div class="mx-6 mt-10">
             <h1 class="text-4xl font-Poppins mb-2">Info Pengguna</h1>
             <h2 class="text-slate-900">Lengkapi informasi pengguna berikut untuk melanjutkan pendaftaran.</h2>
 
@@ -46,7 +46,9 @@
                     <input required type="password" name="password" id="passwordField" class="border rounded-lg w-full h-10 outline-none px-4 py-2 focus:ring focus:ring-cyan-500">
                 </div>
 
-                <button type="button" class="mt-6 w-full h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md px-3 py-1 text-white text-center font-ProductSans self-center scale-100 active:scale-90 transition-all duration-75" onclick="submitRegForm()">Selesai</button>
+                <div class="w-full md:flex pt-6">
+                    <button type="button" class="mt-6 md:w-1/2 w-full mx-auto h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-md px-3 py-1 text-white text-center font-ProductSans self-center scale-100 active:scale-90 transition-all duration-75" onclick="submitRegForm()">Selesai</button>
+                </div>
             </form>
         </div>
     </div>

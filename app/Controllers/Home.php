@@ -6,6 +6,6 @@ class Home extends SessionController
 {
     public function index()
     {
-        return view('welcome_message');
+        return redirect()->to(HOST_URL . '/login');
     }
 }
